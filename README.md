@@ -1,5 +1,9 @@
 # GuessNumber
 用verilog在FPGA上實作猜數字遊戲
+
+
+
+
 module test(input[0:3]IN,
 				input load1,load2,load3,load4,
 				input compare,
