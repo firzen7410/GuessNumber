@@ -1,5 +1,5 @@
 module test(input[0:3]IN,
-				input load1,load2,load3,load4,
+				input load1,load2,load3,load4,//輕觸開關
 				input test,
 				input CLK,reset,
 				output reg[0:3] Anode_Activate,
