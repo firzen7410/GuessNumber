@@ -1,0 +1,125 @@
+module haha(
+	input[3:0] IN,
+	input Load_A,
+	input Load_B,
+	input Load_C,
+	input Load_D,
+	input test,
+	output reg[3:0]	IN_A,
+	output reg[3:0]	IN_B,
+	output reg[3:0]	IN_C,
+	output reg[3:0]	IN_D,
+	output reg[2:0]	nA,
+	output reg[2:0]	nB,
+	input		CLK,Clear
+);	
+	reg count1=0;
+	reg count2=0;
+	reg count3=0;
+	reg count4=0;
+	reg[2:0]	count=3'b000;		
+	reg[3:0] ansA=4'b0001;
+	reg[3:0] ansB=4'b0010;
+	reg[3:0] ansC=4'b0011;
+	reg[3:0] ansD=4'b0100;
+	
+	always@(IN)
+		if(Load_A==1)
+			begin
+				IN_A<=IN;
+			end	
+		else if(Load_B==1)
+			begin
+				IN_B<=IN;
+			end
+		else if(Load_C==1)
+			begin
+				IN_C<=IN;
+			end
+		else if(Load_D==1)
+			begin
+				IN_D<=IN;
+			end
+			
+		always@(posedge CLK,negedge Clear)
+			if(!Clear)
+			begin
+				nA <= 3'b000;
+				nB <= 3'b000;
+				count1=1;
+			end		
+			else if(count1==1 && IN_A==ansA && test==1)
+				begin
+					nA <= nA + 1'b1;
+					count1=0;
+					count2=1;
+				end	
+			else if(count1==1 && test==1 &&(IN_A==ansB || IN_A==ansC || IN_A==ansD))	
+				begin
+					nB <= nB + 1'b1;
+					count1=0;
+					count2=1;
+				end	
+			else if(count1==1 && test==1)
+				begin
+					count1=0;
+					count2=1;	
+				end
+			else if(count2==1 && IN_B==ansB && test==1)
+				begin
+					nA <= nA + 1'b1;
+					count2=0;
+					count3=1;
+				end
+			else if(count2==1 && test==1 && (IN_B==ansA || IN_B==ansC || IN_B==ansD))	
+				begin
+					nB <= nB + 1'b1;
+					count2=0;
+					count3=1;
+				end
+				else if(count2==1 && test==1)
+				begin
+					count2=0;
+					count3=1;
+				end
+			else if(count3==1 && IN_C==ansC && test==1)
+				begin
+					nA <= nA + 1'b1;
+					count3=0;
+					count4=1;
+				end	
+			else if(count3==1 && test==1 && (IN_C==ansA || IN_C==ansB || IN_C==ansD))	
+				begin
+					nB <= nB + 1'b1;
+					count3=0;
+					count4=1;
+				end
+				else if(count3==1 && test==1)
+				begin
+					count3=0;
+					count4=1;
+				end
+			else if(count4==1 && IN_D==ansD && test==1)
+				begin
+					nA <= nA + 1'b1;
+					count1=0;
+					count2=0;
+					count3=0;
+					count4=0;
+				end	
+			else if(count4==1 && test==1 && (IN_D==ansA || IN_D==ansB || IN_D==ansC))	
+				begin
+					nB <= nB + 1'b1;
+					count1=0;
+					count2=0;
+					count3=0;
+					count4=0;
+				end
+			else if(count4==1 && test==1)
+				begin
+					count1=0;
+					count2=0;
+					count3=0;
+					count4=0;	
+				end
+endmodule	
