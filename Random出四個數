@@ -1,0 +1,44 @@
+module test_random (output reg[4:1] random,
+				input clk,reset,
+				output reg [0:3]ans_A,
+				output reg [0:3]ans_B,
+				output reg [0:3]ans_C,
+				output reg [0:3]ans_D,
+				output reg [0:2]Rand_Ans_Counter);
+				
+	always@ (posedge clk or posedge reset)
+	begin
+		if (reset)
+		begin
+			random <= 4'b0001;
+			Rand_Ans_Counter <= 3'b000;
+		end
+		else if(Rand_Ans_Counter == 3'b000 || Rand_Ans_Counter == 3'b001 || Rand_Ans_Counter == 3'b010 || Rand_Ans_Counter == 3'b011)
+		begin	
+			random <= {random[3:2],random[4]^random[1],random[4]};
+			case(random)
+				4'b0000:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0001:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0010:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0011:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0100:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0101:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0110:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b0111:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b1000:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+				4'b1001:Rand_Ans_Counter <= Rand_Ans_Counter + 1;
+			endcase
+		end
+	end
+	
+	always@*
+	begin
+		case(Rand_Ans_Counter)
+			3'b00:ans_A <= random;
+			3'b01:ans_B <= random;
+			3'b10:ans_C <= random;
+			3'b11:ans_D <= random;
+		endcase
+	end
+
+endmodule
