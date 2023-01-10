@@ -1,0 +1,203 @@
+module haha(input[0:3]IN,
+				input load1,load2,load3,load4,//輕觸開關
+				input test,
+				input CLK,reset,
+				output reg[0:3] Anode_Activate,
+				output reg[0:6]LED_out,
+				output reg[0:3]nA,
+				output reg[0:3]nB,
+				output reg beeper);
+	wire[0:1]LED_Activating_Counter;
+	reg [0:32]fresh_Counter;
+	reg [0:3]LED_BCD;
+	reg [0:3]IN_A;
+	reg [0:3]IN_B;
+	reg [0:3]IN_C;
+	reg [0:3]IN_D;
+	reg count1=0;
+	reg count2=0;
+	reg count3=0;
+	reg count4=0;
+	reg[3:0] ansA=4'b0101;
+	reg[3:0] ansB=4'b0110;
+	reg[3:0] ansC=4'b0111;
+	reg[3:0] ansD=4'b1000;
+
+	divfreq F0(CLK,CLK_div);
+
+
+
+	always@(posedge CLK_div,negedge reset) 
+	begin
+		if(!reset)
+		begin
+			fresh_Counter <= 0;
+		end
+		else
+			fresh_Counter <= fresh_Counter + 1;
+	end
+	assign LED_Activating_Counter = fresh_Counter[30:31];
+
+	always@*
+	begin
+		if(load1 && LED_Activating_Counter==2'b00 && !test)
+			IN_A = IN;
+			
+		else if(load2 && LED_Activating_Counter==2'b01 && !test)
+			IN_B = IN;
+			
+		else if(load3 && LED_Activating_Counter==2'b10 && !test)
+			IN_C = IN;
+			
+		else if(load4 && LED_Activating_Counter==2'b11 && !test)
+			IN_D = IN;
+			
+		else
+			case(LED_Activating_Counter)
+				2'b00:begin Anode_Activate = 4'b0111;	LED_BCD = IN_A;end
+				2'b01:begin Anode_Activate = 4'b1011;	LED_BCD = IN_B;end
+				2'b10:begin Anode_Activate = 4'b1101;	LED_BCD = IN_C;end
+				2'b11:begin Anode_Activate = 4'b1110;	LED_BCD = IN_D;end
+			endcase
+	end
+
+	always @(LED_BCD)
+	begin
+		case(LED_BCD)
+			4'b0000: LED_out = 7'b0000001; // "0"     
+			4'b0001: LED_out = 7'b1001111; // "1" 
+			4'b0010: LED_out = 7'b0010010; // "2" 
+			4'b0011: LED_out = 7'b0000110; // "3" 
+			4'b0100: LED_out = 7'b1001100; // "4" 
+			4'b0101: LED_out = 7'b0100100; // "5" 
+			4'b0110: LED_out = 7'b0100000; // "6" 
+			4'b0111: LED_out = 7'b0001111; // "7" 
+			4'b1000: LED_out = 7'b0000000; // "8"     
+			4'b1001: LED_out = 7'b0000100; // "9" 
+			default: LED_out = 7'b0000001; // "0"
+		endcase
+	end
+	
+	always@(posedge CLK_div,negedge reset)
+   if(!reset)
+   begin
+		nA = 4'b0000;
+		nB = 4'b0000;
+		beeper = 0;
+		count1=1;
+   end  
+   else if(count1==1 && IN_A==ansA && test==1)
+   begin
+		nA = nA + 1'b1;
+		count1=0;
+		count2=1;
+   end 
+   else if(count1==1 && test==1 &&(IN_A==ansB || IN_A==ansC || IN_A==ansD)) 
+   begin
+		nB = nB + 1'b1;
+		count1=0;
+		count2=1;
+   end 
+   else if(count1==1 && test==1)
+   begin
+		count1=0;
+		count2=1; 
+   end
+   else if(count2==1 && IN_B==ansB && test==1)
+	begin
+		case(nA)
+			4'b0000: nA = nA + 1'b1;
+			4'b0001: nA = 4'b0011;
+		endcase	
+		count2=0;
+		count3=1;
+   end
+   else if(count2==1 && test==1 && (IN_B==ansA || IN_B==ansC || IN_B==ansD)) 
+   begin
+		case(nB)
+			4'b0000: nB = nB + 1'b1;
+			4'b0001: nB = 4'b0011;
+		endcase;
+		count2=0;
+		count3=1;
+   end
+	else if(count2==1 && test==1)
+		begin
+			count2=0;
+			count3=1;
+		end
+   else if(count3==1 && IN_C==ansC && test==1)
+   begin
+		case(nA)
+			4'b0000: nA = nA + 1'b1;
+			4'b0001: nA = 4'b0011;
+			4'b0011: nA = 4'b0111;
+		endcase
+		count3=0;
+		count4=1;
+   end 
+   else if(count3==1 && test==1 && (IN_C==ansA || IN_C==ansB || IN_C==ansD)) 
+   begin
+		case(nB)
+			4'b0000: nB = nB + 1'b1;
+			4'b0001: nB = 4'b0011;
+			4'b0011: nB = 4'b0111;
+		endcase
+		count3=0;
+		count4=1;
+   end
+   else if(count3==1 && test==1)
+   begin
+		count3=0;
+		count4=1;
+	end
+   else if(count4==1 && IN_D==ansD && test==1)
+   begin
+		case(nA)
+			4'b0000: nA = nA + 1'b1;
+			4'b0001: nA = 4'b0011;
+			4'b0011: nA = 4'b0111;
+			4'b0111: nA = 4'b1111;
+		endcase
+		count1=0;
+		count2=0;
+		count3=0;
+		count4=0;
+		if(nA==4'b1111)	beeper=1;
+	end 
+   else if(count4==1 && test==1 && (IN_D==ansA || IN_D==ansB || IN_D==ansC)) 
+   begin
+		case(nB)
+			4'b0000: nB = nB + 1'b1;
+			4'b0001: nB = 4'b0011;
+			4'b0011: nB = 4'b0111;
+			4'b0111: nB = 4'b1111;
+		endcase
+		count1=0;
+		count2=0;
+		count3=0;
+		count4=0;
+   end
+   else if(count4==1 && test==1)
+   begin
+		count1=0;
+		count2=0;
+		count3=0;
+		count4=0; 
+   end
+endmodule
+
+
+module divfreq(input CLK, output reg CLK_div);
+	reg [24:0] Count = 25'b0;
+	always @(posedge CLK)
+		begin
+			if(Count > 10000)
+				begin
+					Count <= 25'b0;
+					CLK_div <= ~CLK_div;
+				end
+			else
+				Count <= Count + 1'b1;
+		end
+endmodule
