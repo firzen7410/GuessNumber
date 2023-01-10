@@ -4,7 +4,7 @@
 
 使用verilog在FPGA上實作猜數字遊戲
 
-##輸入:
+## Menu
 
 指撥開關_紅1:reset
 
