@@ -4,7 +4,8 @@
 
 使用verilog在FPGA上實作猜數字遊戲
 
-輸入:
+##輸入:
+
 指撥開關_紅1:reset
 
 指撥開關_紅4:檢查
@@ -13,7 +14,8 @@
 
 輕觸開關:讀入相對應4bit的數字
 ![46721](https://user-images.githubusercontent.com/122252274/211468765-3e7bf629-037d-4e48-80ef-cf9f796d59d9.png)
-輸出:
+##輸出:
+
 蜂鳴器:當4位數猜對會發聲
 ![46719](https://user-images.githubusercontent.com/122252274/211468523-d3393820-2c0c-487c-8fe4-a0673bef7f5c.png)
 7段顯示器:顯示使用者輸入的四位數字
