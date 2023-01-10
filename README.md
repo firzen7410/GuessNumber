@@ -23,7 +23,8 @@
 LED_紅色:3bit/顯示多少個數字位置正確
 
 LED_綠色:3bit/顯示多少個數字存在，但位置不正確
-![46722](https://user-images.githubusercontent.com/122252274/211468856-733582e0-1cb8-4a5c-b587-8675fbd02520.png)
+![46725](https://user-images.githubusercontent.com/122252274/211549241-c4d780d7-64bd-47e3-8a7a-f502748ca201.png)
+
 ## 使用說明
 
 使用者必須先利用藍色指撥開關選擇想輸入的數字，再按相對應的輕觸開關將數字讀入，
