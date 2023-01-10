@@ -33,3 +33,7 @@ LED_綠色:3bit/顯示多少個數字存在，但位置不正確
 ，遊戲即結束。
 ![46723](https://user-images.githubusercontent.com/122252274/211468867-b94dd728-2f78-4695-a97c-7f2d947f179a.jpg)
 
+## 影片連結
+
+https://youtu.be/xxStJrnIMgs
+
