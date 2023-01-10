@@ -17,7 +17,7 @@
 ## 輸出
 
 蜂鳴器:當4位數猜對會發聲
-![46719](https://user-images.githubusercontent.com/122252274/211468523-d3393820-2c0c-487c-8fe4-a0673bef7f5c.png)
+![46719](https://user-images.githubusercontent.com/122252274/211470450-68dd5155-1b73-4fa2-a2ad-4744da6ce103.png)
 7段顯示器:顯示使用者輸入的四位數字
 
 LED_紅色:3bit/顯示多少個數字位置正確
